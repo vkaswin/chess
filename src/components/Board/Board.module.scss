@@ -1,0 +1,80 @@
+.container {
+  display: grid;
+  grid-template-rows: repeat(8, var(--box-size));
+  justify-content: center;
+  --box-size: 75px;
+  .row {
+    display: grid;
+    grid-template-columns: repeat(8, var(--box-size));
+    &:nth-child(n) {
+      .column {
+        &:nth-child(n) {
+          background-color: #e7e7ce;
+        }
+        &:nth-child(2n) {
+          background-color: #798f5b;
+        }
+      }
+    }
+    &:nth-child(2n) {
+      .column {
+        &:nth-child(n) {
+          // #6A874D
+          // #BBCB3C - tile
+          background-color: #798f5b;
+        }
+        &:nth-child(2n) {
+          // #D6D6BC
+          // #F6F67E - tile
+          background-color: #e7e7ce;
+        }
+      }
+    }
+    .column[data-color="black"][data-piece="knight"] {
+      background-image: url("../../assets/images/black/knight.png");
+    }
+    .column[data-color="black"][data-piece="queen"] {
+      background-image: url("../../assets/images/black/queen.png");
+    }
+    .column[data-color="black"][data-piece="king"] {
+      background-image: url("../../assets/images/black/king.png");
+    }
+    .column[data-color="black"][data-piece="rook"] {
+      background-image: url("../../assets/images/black/rook.png");
+    }
+    .column[data-color="black"][data-piece="pawn"] {
+      background-image: url("../../assets/images/black/pawn.png");
+    }
+    .column[data-color="black"][data-piece="bishop"] {
+      background-image: url("../../assets/images/black/bishop.png");
+    }
+    .column[data-color="white"][data-piece="knight"] {
+      background-image: url("../../assets/images/white/knight.png");
+    }
+    .column[data-color="white"][data-piece="queen"] {
+      background-image: url("../../assets/images/white/queen.png");
+    }
+    .column[data-color="white"][data-piece="king"] {
+      background-image: url("../../assets/images/white/king.png");
+    }
+    .column[data-color="white"][data-piece="rook"] {
+      background-image: url("../../assets/images/white/rook.png");
+    }
+    .column[data-color="white"][data-piece="pawn"] {
+      background-image: url("../../assets/images/white/pawn.png");
+    }
+    .column[data-color="white"][data-piece="bishop"] {
+      background-image: url("../../assets/images/white/bishop.png");
+    }
+    .column {
+      background-size: contain;
+      border: none;
+    }
+    .column {
+      cursor: pointer;
+      &:disabled {
+        cursor: default;
+      }
+    }
+  }
+}
