@@ -1,53 +1,150 @@
 import { useState } from "react";
 import { Board } from "types/chess";
+import Piece from "components/Piece";
 
 import styles from "./Board.module.scss";
 
 const ChessBoard = () => {
   const [board, setBoard] = useState<Board>([
     [
-      "black-rook",
-      "black-knight",
-      "black-bishop",
-      "black-king",
-      "black-queen",
-      "black-bishop",
-      "black-knight",
-      "black-rook",
+      {
+        color: "black",
+        piece: "rook",
+      },
+      {
+        color: "black",
+        piece: "knight",
+      },
+      {
+        color: "black",
+        piece: "bishop",
+      },
+      {
+        color: "black",
+        piece: "king",
+      },
+      {
+        color: "black",
+        piece: "queen",
+      },
+      {
+        color: "black",
+        piece: "bishop",
+      },
+      {
+        color: "black",
+        piece: "knight",
+      },
+      {
+        color: "black",
+        piece: "rook",
+      },
     ],
     [
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
-      "black-pawn",
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
     ],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
+    [{}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}],
     [
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
-      "white-pawn",
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
     ],
     [
-      "white-rook",
-      "white-knight",
-      "white-bishop",
-      "white-king",
-      "white-queen",
-      "white-bishop",
-      "white-knight",
-      "white-rook",
+      {
+        color: "white",
+        piece: "rook",
+      },
+      {
+        color: "white",
+        piece: "knight",
+      },
+      {
+        color: "white",
+        piece: "bishop",
+      },
+      {
+        color: "white",
+        piece: "king",
+      },
+      {
+        color: "white",
+        piece: "queen",
+      },
+      {
+        color: "white",
+        piece: "bishop",
+      },
+      {
+        color: "white",
+        piece: "knight",
+      },
+      {
+        color: "white",
+        piece: "rook",
+      },
     ],
   ]);
 
@@ -55,21 +152,18 @@ const ChessBoard = () => {
     <div className={styles.container}>
       {board.map((chessPieces, index) => {
         return (
-          <div key={index} className={styles.row}>
-            {chessPieces.map((chessPiece, index) => {
-              let [color = null, piece = null] = chessPiece
-                ? chessPiece.split("-")
-                : [];
+          <div key={index} className={styles.wrapper}>
+            {chessPieces.map(({ color, piece }, index) => {
               return (
-                <div
+                <Piece
                   key={index}
-                  className={styles.column}
+                  className={styles.piece}
                   {...(color &&
                     piece && {
-                      "data-color": color,
-                      "data-piece": piece,
+                      color: color,
+                      piece: piece,
                     })}
-                ></div>
+                />
               );
             })}
           </div>
