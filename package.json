@@ -1,7 +1,7 @@
 {
     "name": "chess",
     "version": "0.1.0",
-    "homepage": "https://vkaswin.github.io/chess-react",
+    "homepage": "https://vkaswin.github.io/chess",
     "private": true,
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.5",
