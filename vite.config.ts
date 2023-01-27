@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: process.env.NODE_ENV === "production" ? "/file-explorer/" : "/",
+  base: process.env.NODE_ENV === "production" ? "/chess/" : "/",
 });
