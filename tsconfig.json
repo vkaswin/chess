@@ -1,33 +1,25 @@
 {
-    "compilerOptions": {
-      "target": "ES2015",
-      "lib": [
-        "dom",
-        "dom.iterable",
-        "esnext"
-      ],
-      "allowJs": true,
-      "skipLibCheck": true,
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "noFallthroughCasesInSwitch": true,
-      "module": "esnext",
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "isolatedModules": false,
-      "noEmit": true,
-      "jsx": "react-jsx",
-      "baseUrl": "src",
-      "paths": {
-          "components/*": ["components/*"],
-          "assets/*": ["assets/*"],
-          "types/*" : ["types/*"]
-      }
-    },
-    "include": [
-      "src"
-    ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    // "paths": {
+    //   "src/*": [
+    //     "./src/*"
+    //   ]
+    // }
+  },
+  "include": ["src"]
 }
-  
