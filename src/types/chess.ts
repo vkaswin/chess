@@ -9,13 +9,24 @@ export type ChessPiece = {
   piece: Pieces;
 } | null;
 
-export type HandleChessPiece = (event: MouseEvent) => void;
-
-export type FindPossibleMove = (data: {
-  piece: string;
-  color: string;
+export type ChessDataAttributes = {
   row: string;
   column: string;
-}) => void;
+  color?: Colors;
+  piece?: Pieces;
+};
 
-export type MoveChessPiece = (data: { row: string; column: string }) => void;
+export type PossibleMoves = string[];
+
+export type HightLightPossibleMoves = (possibleMoves: PossibleMoves) => void;
+
+export type SelectedPiece = {
+  row: number;
+  column: number;
+  color: Colors;
+  piece: Pieces;
+  possibleMoves?: PossibleMoves;
+  selectedMove?: string;
+} | null;
+
+export type isExist = (row: number, column: number) => boolean;

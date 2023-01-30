@@ -17,31 +17,52 @@ body {
   .row {
     display: grid;
     grid-template-columns: repeat(8, var(--box-size));
-    &:nth-child(n) {
-      .piece {
-        &:nth-child(n) {
+    &:nth-child(odd) {
+      .tile {
+        &:nth-child(odd) {
           background-color: #e7e7ce;
+          &:is(.selected) {
+            background-color: #f6f67e;
+          }
+          &::after {
+            background-color: #d6d6bc;
+          }
         }
-        &:nth-child(2n) {
+        &:nth-child(even) {
           background-color: #798f5b;
+          &:is(.selected) {
+            background-color: #bbcb3c;
+          }
+          &::after {
+            background-color: #6a874d;
+          }
         }
       }
     }
-    &:nth-child(2n) {
-      .piece {
-        &:nth-child(n) {
-          // #6A874D
-          // #BBCB3C - tile
+    &:nth-child(even) {
+      .tile {
+        &:nth-child(odd) {
           background-color: #798f5b;
+          &:is(.selected) {
+            background-color: #bbcb3c;
+          }
+          &::after {
+            background-color: #6a874d;
+          }
         }
-        &:nth-child(2n) {
-          // #D6D6BC
-          // #F6F67E - tile
+        &:nth-child(even) {
           background-color: #e7e7ce;
+          &:is(.selected) {
+            background-color: #f6f67e;
+          }
+          &::after {
+            background-color: #d6d6bc;
+          }
         }
       }
     }
-    .piece {
+    .tile {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,9 +72,86 @@ body {
       &:disabled {
         cursor: default;
       }
-      img {
-        object-fit: contain;
+      &::after {
+        display: none;
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+      }
+      &:is(.highlight) {
+        &::after {
+          display: block;
+        }
+      }
+      .icon {
+        background-size: 100%;
         width: 100%;
+        height: 100%;
+      }
+    }
+    .tile[data-color="black"][data-piece="king"] {
+      .icon {
+        background-image: url("./assets/images/black/king.png");
+      }
+    }
+    .tile[data-color="black"][data-piece="queen"] {
+      .icon {
+        background-image: url("./assets/images/black/queen.png");
+      }
+    }
+    .tile[data-color="black"][data-piece="knight"] {
+      .icon {
+        background-image: url("./assets/images/black/knight.png");
+      }
+    }
+    .tile[data-color="black"][data-piece="rook"] {
+      .icon {
+        background-image: url("./assets/images/black/rook.png");
+      }
+    }
+    .tile[data-color="black"][data-piece="bishop"] {
+      .icon {
+        background-image: url("./assets/images/black/bishop.png");
+      }
+    }
+    .tile[data-color="black"][data-piece="pawn"] {
+      .icon {
+        background-image: url("./assets/images/black/pawn.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="king"] {
+      .icon {
+        background-image: url("./assets/images/white/king.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="queen"] {
+      .icon {
+        background-image: url("./assets/images/white/queen.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="knight"] {
+      .icon {
+        background-image: url("./assets/images/white/knight.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="rook"] {
+      .icon {
+        background-image: url("./assets/images/white/rook.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="bishop"] {
+      .icon {
+        background-image: url("./assets/images/white/bishop.png");
+      }
+    }
+    .tile[data-color="white"][data-piece="pawn"] {
+      .icon {
+        background-image: url("./assets/images/white/pawn.png");
       }
     }
   }
