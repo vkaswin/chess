@@ -5,9 +5,9 @@ export type Pieces = "king" | "queen" | "bishop" | "knight" | "rook" | "pawn";
 export type Colors = "black" | "white";
 
 export type ChessPiece = {
-  color?: Colors;
-  piece?: Pieces;
-};
+  color: Colors;
+  piece: Pieces;
+} | null;
 
 export type HandleChessPiece = (event: MouseEvent) => void;
 

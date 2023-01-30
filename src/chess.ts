@@ -72,10 +72,10 @@ const board: Board = [
       piece: "pawn",
     },
   ],
-  [{}, {}, {}, {}, {}, {}, {}, {}],
-  [{}, {}, {}, {}, {}, {}, {}, {}],
-  [{}, {}, {}, {}, {}, {}, {}, {}],
-  [{}, {}, {}, {}, {}, {}, {}, {}],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
   [
     {
       color: "white",
@@ -154,19 +154,22 @@ const InitChessBoard = () => {
     let container = document.createElement("div");
     container.classList.add("row");
 
-    chessPieces.forEach(({ color, piece }, column) => {
-      let chessPiece = document.createElement("button");
-      chessPiece.classList.add("piece");
-      chessPiece.setAttribute("data-row", row.toString());
-      chessPiece.setAttribute("data-column", column.toString());
-      if (color && piece) {
-        chessPiece.setAttribute("data-color", color);
-        chessPiece.setAttribute("data-piece", piece);
+    chessPieces.forEach((chessPiece, column) => {
+      let button = document.createElement("button");
+      button.classList.add("piece");
+      button.setAttribute("data-row", row.toString());
+      button.setAttribute("data-column", column.toString());
+      button.addEventListener("click", handleClickPiece);
+      button.disabled = !chessPiece;
+      if (chessPiece) {
+        let { color, piece } = chessPiece;
+        button.setAttribute("data-color", color);
+        button.setAttribute("data-piece", piece);
         let image = document.createElement("img");
         image.src = getChessPiece(color, piece);
-        chessPiece.append(image);
+        button.append(image);
       }
-      container.append(chessPiece);
+      container.append(button);
     });
 
     chessBoard.append(container);
@@ -174,5 +177,10 @@ const InitChessBoard = () => {
 
   document.body.append(chessBoard);
 };
+
+function handleClickPiece(this: HTMLButtonElement) {
+  let { color = null, piece = null, row, column } = this.dataset;
+  console.log(color, piece, row, column);
+}
 
 export default InitChessBoard;
