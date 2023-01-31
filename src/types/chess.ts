@@ -16,7 +16,11 @@ export type ChessDataAttributes = {
   piece?: Pieces;
 };
 
-export type PossibleMoves = string[];
+export type PossibleMoves = {
+  row: number;
+  column: number;
+  className: string;
+}[];
 
 export type HightLightPossibleMoves = (possibleMoves: PossibleMoves) => void;
 
@@ -29,4 +33,10 @@ export type SelectedPiece = {
   selectedMove?: string;
 } | null;
 
-export type isExist = (row: number, column: number) => boolean;
+export type isExist = (data: {
+  row: number;
+  column: number;
+  color: Colors;
+}) => boolean;
+
+export type HandleChessPiece = (possibleMoves: PossibleMoves) => void;

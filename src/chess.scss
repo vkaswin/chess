@@ -27,6 +27,9 @@ body {
           &::after {
             background-color: #d6d6bc;
           }
+          &::before {
+            border-color: #d8d8c5;
+          }
         }
         &:nth-child(even) {
           background-color: #798f5b;
@@ -35,6 +38,9 @@ body {
           }
           &::after {
             background-color: #6a874d;
+          }
+          &::before {
+            border-color: #859c6d;
           }
         }
       }
@@ -49,6 +55,9 @@ body {
           &::after {
             background-color: #6a874d;
           }
+          &::before {
+            border-color: #859c6d;
+          }
         }
         &:nth-child(even) {
           background-color: #e7e7ce;
@@ -57,6 +66,9 @@ body {
           }
           &::after {
             background-color: #d6d6bc;
+          }
+          &::before {
+            border-color: #d8d8c5;
           }
         }
       }
@@ -72,6 +84,20 @@ body {
       &:disabled {
         cursor: default;
       }
+      &::before {
+        display: none;
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        background-color: transparent;
+        border-width: 4px;
+        border-style: solid;
+        border-radius: 50%;
+      }
       &::after {
         display: none;
         position: absolute;
@@ -85,6 +111,11 @@ body {
       }
       &:is(.highlight) {
         &::after {
+          display: block;
+        }
+      }
+      &:is(.capture) {
+        &::before {
           display: block;
         }
       }
