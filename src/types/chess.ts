@@ -33,7 +33,7 @@ export type SelectedPiece = {
   selectedMove?: string;
 } | null;
 
-export type isExist = (data: {
+export type CanPlace = (data: {
   row: number;
   column: number;
   color: Colors;

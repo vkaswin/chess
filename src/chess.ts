@@ -3,7 +3,7 @@ import {
   ChessDataAttributes,
   HandleChessPiece,
   HightLightPossibleMoves,
-  isExist,
+  CanPlace,
   Pieces,
   PossibleMoves,
   SelectedPiece,
@@ -13,155 +13,159 @@ import "./chess.scss";
 
 const Chess = (() => {
   let board: Board = [
-    [
-      {
-        color: "black",
-        piece: "rook",
-      },
-      {
-        color: "black",
-        piece: "knight",
-      },
-      {
-        color: "black",
-        piece: "bishop",
-      },
-      {
-        color: "black",
-        piece: "king",
-      },
-      {
-        color: "black",
-        piece: "queen",
-      },
-      {
-        color: "black",
-        piece: "bishop",
-      },
-      {
-        color: "black",
-        piece: "knight",
-      },
-      {
-        color: "black",
-        piece: "rook",
-      },
-    ],
-    [
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-      {
-        color: "black",
-        piece: "pawn",
-      },
-    ],
+    // [
+    //   {
+    //     color: "black",
+    //     piece: "rook",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "knight",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "bishop",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "king",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "queen",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "bishop",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "knight",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "rook",
+    //   },
+    // ],
+    // [
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "black",
+    //     piece: "pawn",
+    //   },
+    // ],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
     [
       null,
-      { color: "black", piece: "pawn" },
       null,
       null,
       null,
       null,
       null,
-      null,
+      { color: "black", piece: "bishop" },
+      { color: "white", piece: "bishop" },
     ],
-    [
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-      {
-        color: "white",
-        piece: "pawn",
-      },
-    ],
-    [
-      {
-        color: "white",
-        piece: "rook",
-      },
-      {
-        color: "white",
-        piece: "knight",
-      },
-      {
-        color: "white",
-        piece: "bishop",
-      },
-      {
-        color: "white",
-        piece: "king",
-      },
-      {
-        color: "white",
-        piece: "queen",
-      },
-      {
-        color: "white",
-        piece: "bishop",
-      },
-      {
-        color: "white",
-        piece: "knight",
-      },
-      {
-        color: "white",
-        piece: "rook",
-      },
-    ],
+    [null, null, null, null, null, null, null, null],
+    [null, null, null, null, null, null, null, null],
+    // [
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "pawn",
+    //   },
+    // ],
+    // [
+    //   {
+    //     color: "white",
+    //     piece: "rook",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "knight",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "bishop",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "king",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "queen",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "bishop",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "knight",
+    //   },
+    //   {
+    //     color: "white",
+    //     piece: "rook",
+    //   },
+    // ],
   ];
 
   const ClassNames = {
@@ -204,10 +208,14 @@ const Chess = (() => {
     document.body.append(chessBoard);
   };
 
-  const isExist: isExist = ({ row, column, color }) => {
+  const canPlace: CanPlace = ({ row, column, color }) => {
     let chessPiece = board[row][column];
 
-    return chessPiece && chessPiece.color !== color ? true : false;
+    if (!chessPiece) {
+      return true;
+    } else {
+      return chessPiece.color !== color;
+    }
   };
 
   const highLightPossibleMoves: HightLightPossibleMoves = (possibleMoves) => {
@@ -246,16 +254,16 @@ const Chess = (() => {
 
       let className: string;
 
-      let exist = isExist({ row, column, color: selectedPiece.color });
+      let isExist = canPlace({ row, column, color: selectedPiece.color });
 
       if (column === selectedPiece.column) {
-        if (exist) {
+        if (isExist) {
           continue;
         } else {
           className = ClassNames.HIGHLIGHT;
         }
       } else {
-        className = exist ? ClassNames.CAPTURE : ClassNames.HIGHLIGHT;
+        className = isExist ? ClassNames.CAPTURE : ClassNames.HIGHLIGHT;
       }
 
       possibleMoves.push({ row, column, className });
@@ -263,7 +271,71 @@ const Chess = (() => {
   };
 
   const handleRook: HandleChessPiece = (possibleMoves) => {
-    console.log(selectedPiece, possibleMoves, "Rook");
+    // Row
+
+    let direction = {
+      row: NaN,
+      column: NaN,
+    };
+
+    const executeLoop = (key: "row" | "column") => {
+      if (!selectedPiece) return;
+
+      direction[key] =
+        selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
+
+      while (direction[key] >= 0) {
+        let data;
+        if (key === "row") {
+          data = {
+            row: direction.row,
+            column: selectedPiece.column,
+          };
+        } else {
+          data = {
+            row: selectedPiece.row,
+            column: direction.column,
+          };
+        }
+
+        let chessPiece = getChessPiece(data);
+
+        if (chessPiece) {
+          if (chessPiece.color !== selectedPiece.color) {
+            possibleMoves.push({
+              ...data,
+              className: ClassNames.CAPTURE,
+            });
+          }
+
+          if (direction[key] < selectedPiece.row) {
+            break;
+          } else {
+            direction[key] =
+              direction[key] > selectedPiece.row
+                ? selectedPiece.row - 1
+                : selectedPiece.row + 1;
+
+            continue;
+          }
+        } else {
+          possibleMoves.push({
+            ...data,
+            className: ClassNames.HIGHLIGHT,
+          });
+        }
+
+        direction[key] =
+          direction[key] === 7
+            ? selectedPiece.row - 1
+            : direction[key] < selectedPiece.row
+            ? direction[key] - 1
+            : direction[key] + 1;
+      }
+    };
+
+    executeLoop("row");
+    executeLoop("column");
   };
 
   const handleBishop: HandleChessPiece = (possibleMoves) => {
@@ -320,12 +392,9 @@ const Chess = (() => {
     let { color, piece, row, column } = this.dataset as ChessDataAttributes;
 
     if (selectedPiece) {
-      let canMoveThePiece =
-        selectedPiece.possibleMoves?.findIndex(
-          (piece) => piece.row === +row && piece.column === +column
-        ) !== -1;
+      let isExist = getChessPiece({ row: +row, column: +column });
 
-      if (!canMoveThePiece || selectedPiece.color === color) return;
+      if (isExist && !this.classList.contains(ClassNames.CAPTURE)) return;
 
       let selectedElement = getElementByRowAndColumn(
         selectedPiece.row,
@@ -395,6 +464,10 @@ const Chess = (() => {
     }
   }
 
+  const getChessPiece = ({ row, column }: { row: number; column: number }) => {
+    return board[row][column];
+  };
+
   const getElementByRowAndColumn = (
     row: string | number,
     column: string | number
@@ -410,3 +483,150 @@ const Chess = (() => {
 })();
 
 export default Chess;
+
+let board: Board = [
+  [
+    {
+      color: "black",
+      piece: "rook",
+    },
+    {
+      color: "black",
+      piece: "knight",
+    },
+    {
+      color: "black",
+      piece: "bishop",
+    },
+    {
+      color: "black",
+      piece: "king",
+    },
+    {
+      color: "black",
+      piece: "queen",
+    },
+    {
+      color: "black",
+      piece: "bishop",
+    },
+    {
+      color: "black",
+      piece: "knight",
+    },
+    {
+      color: "black",
+      piece: "rook",
+    },
+  ],
+  [
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+    {
+      color: "black",
+      piece: "pawn",
+    },
+  ],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+    {
+      color: "white",
+      piece: "pawn",
+    },
+  ],
+  [
+    {
+      color: "white",
+      piece: "rook",
+    },
+    {
+      color: "white",
+      piece: "knight",
+    },
+    {
+      color: "white",
+      piece: "bishop",
+    },
+    {
+      color: "white",
+      piece: "king",
+    },
+    {
+      color: "white",
+      piece: "queen",
+    },
+    {
+      color: "white",
+      piece: "bishop",
+    },
+    {
+      color: "white",
+      piece: "knight",
+    },
+    {
+      color: "white",
+      piece: "rook",
+    },
+  ],
+];
