@@ -484,7 +484,7 @@ const Chess = (() => {
 
 export default Chess;
 
-let board: Board = [
+/*let board: Board = [
   [
     {
       color: "black",
@@ -629,4 +629,4 @@ let board: Board = [
       piece: "rook",
     },
   ],
-];
+];*/
