@@ -3,7 +3,6 @@ import {
   ChessDataAttributes,
   HandleChessPiece,
   HightLightPossibleMoves,
-  CanPlace,
   Pieces,
   PossibleMoves,
   SelectedPiece,
@@ -13,76 +12,6 @@ import "./chess.scss";
 
 const Chess = (() => {
   let board: Board = [
-    // [
-    //   {
-    //     color: "black",
-    //     piece: "rook",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "knight",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "bishop",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "king",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "queen",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "bishop",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "knight",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "rook",
-    //   },
-    // ],
-    // [
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "black",
-    //     piece: "pawn",
-    //   },
-    // ],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
@@ -91,81 +20,24 @@ const Chess = (() => {
       null,
       null,
       null,
+      { color: "black", piece: "knight" },
       null,
       null,
-      { color: "black", piece: "bishop" },
-      { color: "white", piece: "bishop" },
+      null,
     ],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
-    // [
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "pawn",
-    //   },
-    // ],
-    // [
-    //   {
-    //     color: "white",
-    //     piece: "rook",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "knight",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "bishop",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "king",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "queen",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "bishop",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "knight",
-    //   },
-    //   {
-    //     color: "white",
-    //     piece: "rook",
-    //   },
-    // ],
+    [
+      null,
+      null,
+      { color: "white", piece: "knight" },
+      null,
+      null,
+      null,
+      null,
+      null,
+    ],
+    [null, null, null, null, null, null, null, null],
   ];
 
   const ClassNames = {
@@ -208,16 +80,6 @@ const Chess = (() => {
     document.body.append(chessBoard);
   };
 
-  const canPlace: CanPlace = ({ row, column, color }) => {
-    let chessPiece = board[row][column];
-
-    if (!chessPiece) {
-      return true;
-    } else {
-      return chessPiece.color !== color;
-    }
-  };
-
   const highLightPossibleMoves: HightLightPossibleMoves = (possibleMoves) => {
     if (possibleMoves.length === 0) return;
 
@@ -233,6 +95,7 @@ const Chess = (() => {
   };
 
   const handlePawn: HandleChessPiece = (possibleMoves) => {
+    console.log(selectedPiece, possibleMoves, "Pawn");
     if (!selectedPiece) return;
 
     if (
@@ -254,16 +117,12 @@ const Chess = (() => {
 
       let className: string;
 
-      let isExist = canPlace({ row, column, color: selectedPiece.color });
+      let chessPiece = getChessPiece({ row, column });
 
-      if (column === selectedPiece.column) {
-        if (isExist) {
-          continue;
-        } else {
-          className = ClassNames.HIGHLIGHT;
-        }
+      if (chessPiece && chessPiece.color === selectedPiece.color) {
+        continue;
       } else {
-        className = isExist ? ClassNames.CAPTURE : ClassNames.HIGHLIGHT;
+        className = chessPiece ? ClassNames.CAPTURE : ClassNames.HIGHLIGHT;
       }
 
       possibleMoves.push({ row, column, className });
@@ -271,8 +130,6 @@ const Chess = (() => {
   };
 
   const handleRook: HandleChessPiece = (possibleMoves) => {
-    // Row
-
     let direction = {
       row: NaN,
       column: NaN,
@@ -282,7 +139,9 @@ const Chess = (() => {
       if (!selectedPiece) return;
 
       direction[key] =
-        selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
+        selectedPiece[key] !== 7
+          ? selectedPiece[key] + 1
+          : selectedPiece[key] - 1;
 
       while (direction[key] >= 0) {
         let data;
@@ -308,13 +167,13 @@ const Chess = (() => {
             });
           }
 
-          if (direction[key] < selectedPiece.row) {
+          if (direction[key] < selectedPiece[key]) {
             break;
           } else {
             direction[key] =
-              direction[key] > selectedPiece.row
-                ? selectedPiece.row - 1
-                : selectedPiece.row + 1;
+              direction[key] > selectedPiece[key]
+                ? selectedPiece[key] - 1
+                : selectedPiece[key] + 1;
 
             continue;
           }
@@ -327,8 +186,8 @@ const Chess = (() => {
 
         direction[key] =
           direction[key] === 7
-            ? selectedPiece.row - 1
-            : direction[key] < selectedPiece.row
+            ? selectedPiece[key] - 1
+            : direction[key] < selectedPiece[key]
             ? direction[key] - 1
             : direction[key] + 1;
       }
@@ -340,6 +199,46 @@ const Chess = (() => {
 
   const handleBishop: HandleChessPiece = (possibleMoves) => {
     console.log(selectedPiece, possibleMoves, "Bishop");
+    if (!selectedPiece) return;
+
+    let row =
+      selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
+
+    let i = 1;
+
+    while (row >= 0) {
+      let columns: number[] = [];
+
+      if (selectedPiece.column + i <= 7) {
+        columns.push(selectedPiece.column + i);
+      }
+      if (selectedPiece.column - i >= 0) {
+        columns.push(selectedPiece.column - i);
+      }
+
+      columns.forEach((column) => {
+        let data = {
+          row,
+          column,
+          className: ClassNames.HIGHLIGHT,
+        };
+
+        possibleMoves.push(data);
+      });
+
+      if (row === 7) {
+        row = selectedPiece.row - 1;
+        i = 1;
+      } else if (row < selectedPiece.row) {
+        row = row - 1;
+        i = i + 1;
+      } else {
+        row = row + 1;
+        i = i + 1;
+      }
+    }
+
+    console.log(possibleMoves);
   };
 
   const handleKnight: HandleChessPiece = (possibleMoves) => {
@@ -348,6 +247,8 @@ const Chess = (() => {
 
   const handleQueen: HandleChessPiece = (possibleMoves) => {
     console.log(selectedPiece, possibleMoves, "Queen");
+    handleRook(possibleMoves);
+    handleBishop(possibleMoves);
   };
 
   const handleKing: HandleChessPiece = (possibleMoves) => {
