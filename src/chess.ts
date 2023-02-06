@@ -29,8 +29,8 @@ const Chess = (() => {
     [null, null, null, null, null, null, null, null],
     [
       null,
-      null,
       { color: "white", piece: "knight" },
+      null,
       null,
       null,
       null,
@@ -198,45 +198,110 @@ const Chess = (() => {
   };
 
   const handleBishop: HandleChessPiece = (possibleMoves) => {
-    console.log(selectedPiece, possibleMoves, "Bishop");
     if (!selectedPiece) return;
 
-    let row =
-      selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
+    const executeLoop = (key: "right" | "left") => {
+      if (!selectedPiece) return;
 
-    let i = 1;
+      let i = 1;
+      let row =
+        selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
 
-    while (row >= 0) {
-      let columns: number[] = [];
+      while (row >= 0) {
+        let column: number = NaN;
 
-      if (selectedPiece.column + i <= 7) {
-        columns.push(selectedPiece.column + i);
-      }
-      if (selectedPiece.column - i >= 0) {
-        columns.push(selectedPiece.column - i);
-      }
+        if (key === "right" && selectedPiece.column + i <= 7) {
+          column = selectedPiece.column + i;
+        } else if (key === "left" && selectedPiece.column - i >= 0) {
+          column = selectedPiece.column - i;
+        } else {
+          break;
+        }
 
-      columns.forEach((column) => {
+        if (isNaN(column)) continue;
+
         let data = {
           row,
           column,
-          className: ClassNames.HIGHLIGHT,
         };
 
-        possibleMoves.push(data);
-      });
+        let chessPiece = getChessPiece(data);
 
-      if (row === 7) {
-        row = selectedPiece.row - 1;
-        i = 1;
-      } else if (row < selectedPiece.row) {
-        row = row - 1;
-        i = i + 1;
-      } else {
-        row = row + 1;
-        i = i + 1;
+        let className =
+          chessPiece && chessPiece.color !== selectedPiece?.color
+            ? ClassNames.CAPTURE
+            : ClassNames.HIGHLIGHT;
+
+        possibleMoves.push({ ...data, className: className });
+
+        if (className === ClassNames.CAPTURE) break;
+
+        if (row === 7) {
+          row = selectedPiece.row - 1;
+          i = 1;
+        } else if (row < selectedPiece.row) {
+          row = row - 1;
+          i = i + 1;
+        } else {
+          row = row + 1;
+          i = i + 1;
+        }
       }
-    }
+    };
+
+    executeLoop("right");
+    executeLoop("left");
+
+    // let i = 1;
+
+    // while (row >= 0) {
+    //   let columns: number[] = [];
+
+    //   if (selectedPiece.column + i <= 7) {
+    //     columns.push(selectedPiece.column + i);
+    //   }
+    //   if (selectedPiece.column - i >= 0) {
+    //     columns.push(selectedPiece.column - i);
+    //   }
+
+    //   let breakLoop = false;
+
+    //   columns.forEach((column) => {
+    //     let data = {
+    //       row,
+    //       column,
+    //     };
+
+    //     let chessPiece = getChessPiece(data);
+    //     let className: string = "";
+
+    //     if (chessPiece && chessPiece.color !== selectedPiece?.color) {
+    //       className = ClassNames.CAPTURE;
+    //     } else {
+    //       className = ClassNames.HIGHLIGHT;
+    //     }
+
+    //     possibleMoves.push({ ...data, className: className });
+
+    //     if (className === ClassNames.CAPTURE) {
+    //       breakLoop = true;
+    //       return;
+    //     }
+    //   });
+
+    //   if (breakLoop) break;
+
+    //   if (row === 7) {
+    //     row = selectedPiece.row - 1;
+    //     i = 1;
+    //   } else if (row < selectedPiece.row) {
+    //     row = row - 1;
+    //     i = i + 1;
+    //   } else {
+    //     row = row + 1;
+    //     i = i + 1;
+    //   }
+    // }
 
     console.log(possibleMoves);
   };
