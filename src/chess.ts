@@ -12,23 +12,146 @@ import "./chess.scss";
 
 const Chess = (() => {
   let board: Board = [
-    [null, null, null, null, null, null, null, null],
+    [
+      {
+        color: "black",
+        piece: "rook",
+      },
+      {
+        color: "black",
+        piece: "knight",
+      },
+      {
+        color: "black",
+        piece: "bishop",
+      },
+      {
+        color: "black",
+        piece: "king",
+      },
+      {
+        color: "black",
+        piece: "queen",
+      },
+      {
+        color: "black",
+        piece: "bishop",
+      },
+      {
+        color: "black",
+        piece: "knight",
+      },
+      {
+        color: "black",
+        piece: "rook",
+      },
+    ],
+    [
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+      {
+        color: "black",
+        piece: "pawn",
+      },
+    ],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [null, null, null, null, null, null, null, null],
     [
-      null,
-      null,
-      null,
-      { color: "black", piece: "king" },
-      null,
-      null,
-      null,
-      null,
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
+      {
+        color: "white",
+        piece: "pawn",
+      },
     ],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
+    [
+      {
+        color: "white",
+        piece: "rook",
+      },
+      {
+        color: "white",
+        piece: "knight",
+      },
+      {
+        color: "white",
+        piece: "bishop",
+      },
+      {
+        color: "white",
+        piece: "king",
+      },
+      {
+        color: "white",
+        piece: "queen",
+      },
+      {
+        color: "white",
+        piece: "bishop",
+      },
+      {
+        color: "white",
+        piece: "knight",
+      },
+      {
+        color: "white",
+        piece: "rook",
+      },
+    ],
   ];
 
   const ClassNames = {
@@ -307,6 +430,38 @@ const Chess = (() => {
 
   const handleKing: HandleChessPiece = (possibleMoves) => {
     console.log(selectedPiece, possibleMoves, "King");
+
+    if (!selectedPiece) return;
+
+    for (let i = -1; i < 2; i++) {
+      let row = selectedPiece.row + i;
+
+      for (let j = -1; j < 2; j++) {
+        let column = selectedPiece.column + j;
+
+        if (
+          (row === selectedPiece.row && column === selectedPiece.column) ||
+          row < 0 ||
+          row > 7 ||
+          column < 0 ||
+          column > 7
+        )
+          continue;
+
+        let data = {
+          row,
+          column,
+        };
+
+        let chessPiece = getChessPiece(data);
+
+        if (chessPiece && chessPiece.color !== selectedPiece.color) {
+          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
+        } else if (!chessPiece) {
+          possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
+        }
+      }
+    }
   };
 
   const clearSelectedPiece = () => {
@@ -438,150 +593,3 @@ const Chess = (() => {
 })();
 
 export default Chess;
-
-/*let board: Board = [
-  [
-    {
-      color: "black",
-      piece: "rook",
-    },
-    {
-      color: "black",
-      piece: "knight",
-    },
-    {
-      color: "black",
-      piece: "bishop",
-    },
-    {
-      color: "black",
-      piece: "king",
-    },
-    {
-      color: "black",
-      piece: "queen",
-    },
-    {
-      color: "black",
-      piece: "bishop",
-    },
-    {
-      color: "black",
-      piece: "knight",
-    },
-    {
-      color: "black",
-      piece: "rook",
-    },
-  ],
-  [
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-    {
-      color: "black",
-      piece: "pawn",
-    },
-  ],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [null, null, null, null, null, null, null, null],
-  [
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-    {
-      color: "white",
-      piece: "pawn",
-    },
-  ],
-  [
-    {
-      color: "white",
-      piece: "rook",
-    },
-    {
-      color: "white",
-      piece: "knight",
-    },
-    {
-      color: "white",
-      piece: "bishop",
-    },
-    {
-      color: "white",
-      piece: "king",
-    },
-    {
-      color: "white",
-      piece: "queen",
-    },
-    {
-      color: "white",
-      piece: "bishop",
-    },
-    {
-      color: "white",
-      piece: "knight",
-    },
-    {
-      color: "white",
-      piece: "rook",
-    },
-  ],
-];*/
