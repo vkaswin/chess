@@ -24,6 +24,9 @@ body {
           &:is(.selected) {
             background-color: #f6f67e;
           }
+          &:is(.danger) {
+            background-color: #da3025;
+          }
           &::after {
             background-color: #d6d6bc;
           }
@@ -35,6 +38,9 @@ body {
           background-color: #798f5b;
           &:is(.selected) {
             background-color: #bbcb3c;
+          }
+          &:is(.danger) {
+            background-color: #da3025;
           }
           &::after {
             background-color: #6a874d;
@@ -52,6 +58,9 @@ body {
           &:is(.selected) {
             background-color: #bbcb3c;
           }
+          &:is(.danger) {
+            background-color: #da3025;
+          }
           &::after {
             background-color: #6a874d;
           }
@@ -63,6 +72,9 @@ body {
           background-color: #e7e7ce;
           &:is(.selected) {
             background-color: #f6f67e;
+          }
+          &:is(.danger) {
+            background-color: #da3025;
           }
           &::after {
             background-color: #d6d6bc;

@@ -38,3 +38,7 @@ export type SelectedPiece = {
 export type HandleChessPiece = (possibleMoves: PossibleMoves) => void;
 
 export type Position = Omit<Moves, "className">;
+
+export type GetPossibleMoves = (
+  data: { piece: Pieces } & Position
+) => PossibleMoves;

@@ -70,8 +70,8 @@ const Chess = (() => {
         piece: "pawn",
       },
       {
-        color: "white",
-        piece: "bishop",
+        color: "black",
+        piece: "pawn",
       },
       {
         color: "black",
@@ -97,7 +97,7 @@ const Chess = (() => {
       },
       {
         color: "white",
-        piece: "bishop",
+        piece: "pawn",
       },
       {
         color: "white",
@@ -160,6 +160,7 @@ const Chess = (() => {
     HIGHLIGHT: "highlight",
     SELECTED: "selected",
     CAPTURE: "capture",
+    DANGER: "danger",
   };
 
   let selectedPiece: SelectedPiece = null;
@@ -206,7 +207,7 @@ const Chess = (() => {
     }
 
     possibleMoves.forEach(({ row, column, className }) => {
-      let element = getElementByRowAndColumn(row, column);
+      let element = getChessPieceElement({ row, column });
       element.disabled = false;
       element.classList.add(className);
     });
@@ -457,10 +458,10 @@ const Chess = (() => {
   const clearSelectedPiece = () => {
     if (!selectedPiece) return;
 
-    let selectedElement = getElementByRowAndColumn(
-      selectedPiece.row,
-      selectedPiece.column
-    );
+    let selectedElement = getChessPieceElement({
+      row: selectedPiece.row,
+      column: selectedPiece.column,
+    });
 
     if (
       selectedElement.hasAttribute("data-piece") &&
@@ -472,20 +473,107 @@ const Chess = (() => {
     selectedElement.classList.remove(
       ClassNames.HIGHLIGHT,
       ClassNames.SELECTED,
-      ClassNames.CAPTURE
+      ClassNames.CAPTURE,
+      ClassNames.DANGER
     );
 
     if (selectedPiece.possibleMoves) {
       selectedPiece.possibleMoves.forEach(({ row, column, className }) => {
-        let element = getElementByRowAndColumn(row, column);
+        let element = getChessPieceElement({ row, column });
         element.disabled =
           selectedPiece?.selectedMove !== `${row}${column}` &&
           className !== ClassNames.CAPTURE;
-        element.classList.remove(ClassNames.HIGHLIGHT, ClassNames.CAPTURE);
+        element.classList.remove(
+          ClassNames.HIGHLIGHT,
+          ClassNames.CAPTURE,
+          ClassNames.DANGER
+        );
       });
     }
 
     selectedPiece = null;
+  };
+
+  function handleCheckMate(this: HTMLButtonElement) {
+    if (!selectedPiece) return;
+
+    let color = turn === "black" ? "white" : "black";
+
+    let element = document.querySelector<HTMLButtonElement>(
+      `[data-piece='king'][data-color='${color}']`
+    );
+
+    if (!element) {
+      console.log(`${turn} wins!`);
+      return;
+    }
+
+    let { row, column, piece } = this.dataset as ChessDataAttributes;
+
+    if (!piece) return;
+
+    let oldRow = selectedPiece.row;
+    let oldColumn = selectedPiece.column;
+
+    selectedPiece.row = +row;
+    selectedPiece.column = +column;
+
+    let possibleMoves = getPossibleMoves(piece);
+
+    selectedPiece.row = oldRow;
+    selectedPiece.column = oldColumn;
+
+    if (possibleMoves.length === 0) return;
+
+    let { row: kingRow, column: kingColumn } =
+      element.dataset as ChessDataAttributes;
+
+    let index = possibleMoves.findIndex(
+      (move) => move.row === +kingRow && move.column === +kingColumn
+    );
+
+    if (index === -1) return;
+
+    element.classList.add(ClassNames.DANGER);
+  }
+
+  const handlePlayerTurn = () => {
+    turn = turn === "black" ? "white" : "black";
+  };
+
+  const getPossibleMoves = (piece: Pieces): PossibleMoves => {
+    let possibleMoves: PossibleMoves = [];
+
+    switch (piece) {
+      case "pawn":
+        handlePawn(possibleMoves);
+        break;
+
+      case "rook":
+        handleRook(possibleMoves);
+        break;
+
+      case "bishop":
+        handleBishop(possibleMoves);
+        break;
+
+      case "knight":
+        handleKnight(possibleMoves);
+        break;
+
+      case "queen":
+        handleQueen(possibleMoves);
+        break;
+
+      case "king":
+        handleKing(possibleMoves);
+        break;
+
+      default:
+        return [];
+    }
+
+    return possibleMoves;
   };
 
   function handleClickPiece(this: HTMLButtonElement) {
@@ -500,10 +588,10 @@ const Chess = (() => {
         return;
       }
 
-      let selectedElement = getElementByRowAndColumn(
-        selectedPiece.row,
-        selectedPiece.column
-      );
+      let selectedElement = getChessPieceElement({
+        row: selectedPiece.row,
+        column: selectedPiece.column,
+      });
       selectedElement.removeAttribute("data-piece");
       selectedElement.removeAttribute("data-color");
 
@@ -518,10 +606,9 @@ const Chess = (() => {
 
       selectedPiece.selectedMove = `${row}${column}`;
       this.disabled = false;
-
+      handleCheckMate.call(this);
       clearSelectedPiece();
-
-      turn = turn === "black" ? "white" : "black";
+      handlePlayerTurn();
     } else if (piece && color) {
       if (turn !== color) return;
       this.disabled = true;
@@ -534,36 +621,7 @@ const Chess = (() => {
         column: +column,
       };
 
-      let possibleMoves: PossibleMoves = [];
-
-      switch (piece as Pieces) {
-        case "pawn":
-          handlePawn(possibleMoves);
-          break;
-
-        case "rook":
-          handleRook(possibleMoves);
-          break;
-
-        case "bishop":
-          handleBishop(possibleMoves);
-          break;
-
-        case "knight":
-          handleKnight(possibleMoves);
-          break;
-
-        case "queen":
-          handleQueen(possibleMoves);
-          break;
-
-        case "king":
-          handleKing(possibleMoves);
-          break;
-
-        default:
-          return;
-      }
+      let possibleMoves = getPossibleMoves(piece);
 
       highLightPossibleMoves(possibleMoves);
     }
@@ -573,10 +631,7 @@ const Chess = (() => {
     return board[row][column];
   };
 
-  const getElementByRowAndColumn = (
-    row: string | number,
-    column: string | number
-  ) => {
+  const getChessPieceElement = ({ row, column }: Position) => {
     return document.querySelector(
       `[data-row='${row}'][data-column='${column}']`
     ) as HTMLButtonElement;
