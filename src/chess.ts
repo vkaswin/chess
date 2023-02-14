@@ -221,6 +221,30 @@ const Chess = (() => {
     )
       return;
 
+    for (
+      let i = 1;
+      i <=
+      ((selectedPiece.color === "black" && selectedPiece.row === 1) ||
+      (selectedPiece.color === "white" && selectedPiece.row === 6)
+        ? 2
+        : 1);
+      i++
+    ) {
+      let data = {
+        row:
+          selectedPiece.color === "black"
+            ? selectedPiece.row + i
+            : selectedPiece.row - i,
+        column: selectedPiece.column,
+      };
+
+      let chessPiece = getChessPiece(data);
+
+      if (chessPiece) break;
+
+      possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
+    }
+
     let row =
       selectedPiece.color === "black"
         ? selectedPiece.row + 1
@@ -229,9 +253,8 @@ const Chess = (() => {
     for (let i = -1; i <= 1; i++) {
       let column = selectedPiece.column + i;
 
-      if (column < 0 || column > 7) continue;
+      if (column < 0 || column > 7 || i === 0) continue;
 
-      let className = "";
       let data = {
         row,
         column,
@@ -239,17 +262,9 @@ const Chess = (() => {
 
       let chessPiece = getChessPiece(data);
 
-      if (chessPiece) {
-        if (chessPiece.color !== selectedPiece.color && i !== 0) {
-          className = ClassNames.CAPTURE;
-        }
-      } else if (i === 0) {
-        className = ClassNames.HIGHLIGHT;
+      if (chessPiece && chessPiece.color !== selectedPiece.color) {
+        possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
       }
-
-      if (className.length === 0) continue;
-
-      possibleMoves.push({ ...data, className });
     }
   };
 
@@ -424,12 +439,19 @@ const Chess = (() => {
 
         let chessPiece = getChessPiece(data);
 
+        if (chessPiece?.color === selectedPiece.color) continue;
+
+        if (chessPiece) {
+          if (chessPiece.color !== selectedPiece.color) {
+            possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
+          }
+
+          continue;
+        }
+
         possibleMoves.push({
           ...data,
-          className:
-            chessPiece && chessPiece.color !== selectedPiece.color
-              ? ClassNames.CAPTURE
-              : ClassNames.HIGHLIGHT,
+          className: ClassNames.HIGHLIGHT,
         });
       }
     }
