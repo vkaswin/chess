@@ -1,6 +1,7 @@
 import {
   Board,
   ChessDataAttributes,
+  Colors,
   HandleChessPiece,
   HightLightPossibleMoves,
   Pieces,
@@ -68,8 +69,8 @@ const Chess = (() => {
         piece: "pawn",
       },
       {
-        color: "black",
-        piece: "pawn",
+        color: "white",
+        piece: "bishop",
       },
       {
         color: "black",
@@ -95,7 +96,7 @@ const Chess = (() => {
       },
       {
         color: "white",
-        piece: "pawn",
+        piece: "bishop",
       },
       {
         color: "white",
@@ -161,6 +162,8 @@ const Chess = (() => {
   };
 
   let selectedPiece: SelectedPiece = null;
+
+  let turn: Colors = "white";
 
   const init = () => {
     let chessBoard = document.createElement("div");
@@ -236,9 +239,11 @@ const Chess = (() => {
 
       let chessPiece = getChessPiece(data);
 
-      if (chessPiece && chessPiece.color !== selectedPiece.color && i !== 0) {
-        className = ClassNames.CAPTURE;
-      } else if (!chessPiece && i === 0) {
+      if (chessPiece) {
+        if (chessPiece.color !== selectedPiece.color && i !== 0) {
+          className = ClassNames.CAPTURE;
+        }
+      } else if (i === 0) {
         className = ClassNames.HIGHLIGHT;
       }
 
@@ -249,127 +254,91 @@ const Chess = (() => {
   };
 
   const handleRook: HandleChessPiece = (possibleMoves) => {
-    let direction = {
-      row: NaN,
-      column: NaN,
-    };
+    if (!selectedPiece) return;
 
-    const executeLoop = (key: "row" | "column") => {
-      if (!selectedPiece) return;
+    const updateMove = (data: { row: number; column: number }): boolean => {
+      let chessPiece = getChessPiece(data);
 
-      direction[key] =
-        selectedPiece[key] !== 7
-          ? selectedPiece[key] + 1
-          : selectedPiece[key] - 1;
-
-      while (direction[key] >= 0) {
-        let data;
-        if (key === "row") {
-          data = {
-            row: direction.row,
-            column: selectedPiece.column,
-          };
-        } else {
-          data = {
-            row: selectedPiece.row,
-            column: direction.column,
-          };
+      if (chessPiece) {
+        if (chessPiece.color !== selectedPiece?.color) {
+          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
         }
-
-        let chessPiece = getChessPiece(data);
-
-        if (chessPiece) {
-          if (chessPiece.color !== selectedPiece.color) {
-            possibleMoves.push({
-              ...data,
-              className: ClassNames.CAPTURE,
-            });
-          }
-
-          if (direction[key] < selectedPiece[key]) {
-            break;
-          } else {
-            direction[key] =
-              direction[key] > selectedPiece[key]
-                ? selectedPiece[key] - 1
-                : selectedPiece[key] + 1;
-
-            continue;
-          }
-        } else {
-          possibleMoves.push({
-            ...data,
-            className: ClassNames.HIGHLIGHT,
-          });
-        }
-
-        direction[key] =
-          direction[key] === 7
-            ? selectedPiece[key] - 1
-            : direction[key] < selectedPiece[key]
-            ? direction[key] - 1
-            : direction[key] + 1;
+        return true;
       }
+
+      possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
+
+      return false;
     };
 
-    executeLoop("row");
-    executeLoop("column");
+    // Top
+    let column = selectedPiece.column;
+    for (let row = selectedPiece.row - 1; row >= 0; row--) {
+      if (updateMove({ row, column })) break;
+    }
+
+    // Bottom
+    for (let row = selectedPiece.row + 1; row <= 7; row++) {
+      if (updateMove({ row, column })) break;
+    }
+
+    // Left
+    let row = selectedPiece.row;
+    for (let column = selectedPiece.column - 1; column >= 0; column--) {
+      if (updateMove({ row, column })) break;
+    }
+
+    // Right
+    for (let column = selectedPiece.column + 1; column <= 7; column++) {
+      if (updateMove({ row, column })) break;
+    }
   };
 
   const handleBishop: HandleChessPiece = (possibleMoves) => {
     if (!selectedPiece) return;
 
-    const executeLoop = (key: "right" | "left") => {
-      if (!selectedPiece) return;
+    const updateMove = (data: { row: number; column: number }): boolean => {
+      let chessPiece = getChessPiece(data);
 
-      let i = 1;
-      let row =
-        selectedPiece.row !== 7 ? selectedPiece.row + 1 : selectedPiece.row - 1;
-
-      while (row >= 0) {
-        let column: number = NaN;
-
-        if (key === "right" && selectedPiece.column + i <= 7) {
-          column = selectedPiece.column + i;
-        } else if (key === "left" && selectedPiece.column - i >= 0) {
-          column = selectedPiece.column - i;
-        } else {
-          break;
+      if (chessPiece) {
+        if (chessPiece.color !== selectedPiece?.color) {
+          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
         }
-
-        if (isNaN(column)) continue;
-
-        let data = {
-          row,
-          column,
-        };
-
-        let chessPiece = getChessPiece(data);
-
-        let className =
-          chessPiece && chessPiece.color !== selectedPiece?.color
-            ? ClassNames.CAPTURE
-            : ClassNames.HIGHLIGHT;
-
-        possibleMoves.push({ ...data, className: className });
-
-        if (className === ClassNames.CAPTURE) break;
-
-        if (row === 7) {
-          row = selectedPiece.row - 1;
-          i = 1;
-        } else if (row < selectedPiece.row) {
-          row = row - 1;
-          i = i + 1;
-        } else {
-          row = row + 1;
-          i = i + 1;
-        }
+        return true;
       }
+
+      possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
+
+      return false;
     };
 
-    executeLoop("right");
-    executeLoop("left");
+    // Top Right
+    let column = selectedPiece.column + 1;
+    for (let row = selectedPiece.row - 1; row >= 0 && column <= 7; row--) {
+      if (updateMove({ row, column })) break;
+      column = column + 1;
+    }
+
+    // Top Left
+    column = selectedPiece.column - 1;
+    for (let row = selectedPiece.row - 1; row >= 0 && column >= 0; row--) {
+      if (updateMove({ row, column })) break;
+      column = column - 1;
+    }
+
+    // Bottom Left
+    column = selectedPiece.column - 1;
+    for (let row = selectedPiece.row + 1; row <= 7 && column >= 0; row++) {
+      if (updateMove({ row, column })) break;
+      column = column - 1;
+    }
+
+    // Bottom Right
+    column = selectedPiece.column + 1;
+    for (let row = selectedPiece.row + 1; row <= 7 && column <= 7; row++) {
+      if (updateMove({ row, column })) break;
+      column = column + 1;
+    }
   };
 
   const handleKnight: HandleChessPiece = (possibleMoves) => {
@@ -412,9 +381,11 @@ const Chess = (() => {
         };
         let chessPiece = getChessPiece(data);
 
-        if (chessPiece && chessPiece.color !== selectedPiece?.color) {
-          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
-        } else if (!chessPiece) {
+        if (chessPiece) {
+          if (chessPiece.color !== selectedPiece?.color) {
+            possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
+          }
+        } else {
           possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
         }
       });
@@ -429,8 +400,6 @@ const Chess = (() => {
   };
 
   const handleKing: HandleChessPiece = (possibleMoves) => {
-    console.log(selectedPiece, possibleMoves, "King");
-
     if (!selectedPiece) return;
 
     for (let i = -1; i < 2; i++) {
@@ -455,11 +424,13 @@ const Chess = (() => {
 
         let chessPiece = getChessPiece(data);
 
-        if (chessPiece && chessPiece.color !== selectedPiece.color) {
-          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
-        } else if (!chessPiece) {
-          possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
-        }
+        possibleMoves.push({
+          ...data,
+          className:
+            chessPiece && chessPiece.color !== selectedPiece.color
+              ? ClassNames.CAPTURE
+              : ClassNames.HIGHLIGHT,
+        });
       }
     }
   };
@@ -502,9 +473,13 @@ const Chess = (() => {
     let { color, piece, row, column } = this.dataset as ChessDataAttributes;
 
     if (selectedPiece) {
-      let isExist = getChessPiece({ row: +row, column: +column });
+      let chessPiece = getChessPiece({ row: +row, column: +column });
 
-      if (isExist && !this.classList.contains(ClassNames.CAPTURE)) return;
+      if (chessPiece && !this.classList.contains(ClassNames.CAPTURE)) {
+        clearSelectedPiece();
+        handleClickPiece.call(this);
+        return;
+      }
 
       let selectedElement = getElementByRowAndColumn(
         selectedPiece.row,
@@ -526,11 +501,12 @@ const Chess = (() => {
       this.disabled = false;
 
       clearSelectedPiece();
+
+      turn = turn === "black" ? "white" : "black";
     } else if (piece && color) {
+      if (turn !== color) return;
       this.disabled = true;
       this.classList.add(ClassNames.SELECTED);
-
-      clearSelectedPiece();
 
       selectedPiece = {
         piece,
