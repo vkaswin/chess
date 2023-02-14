@@ -359,53 +359,49 @@ const Chess = (() => {
   const handleKnight: HandleChessPiece = (possibleMoves) => {
     if (!selectedPiece) return;
 
-    let j = 1;
+    const updateMove = (data: { row: number; column: number }) => {
+      let { row, column } = data;
 
-    const updateValue = (val: number) => {
-      if (val < 0) {
-        j = j + 1;
-      } else if (val > 0) {
-        j = j - 1;
+      if (row < 0 || row > 7 || column < 0 || column > 7) return;
+
+      let chessPiece = getChessPiece(data);
+
+      if (chessPiece) {
+        if (chessPiece.color !== selectedPiece?.color) {
+          possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
+        }
+        return;
       }
+
+      possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
     };
 
-    for (let i = -2; i < 3; i++) {
+    // Top Left
+    for (let i = 1; i <= 2; i++) {
+      let row = selectedPiece.row - i;
+      let column = selectedPiece.column - (i === 1 ? 2 : 1);
+      updateMove({ row, column });
+    }
+
+    // Top Right
+    for (let i = 1; i <= 2; i++) {
+      let row = selectedPiece.row - i;
+      let column = selectedPiece.column + (i === 1 ? 2 : 1);
+      updateMove({ row, column });
+    }
+
+    // Bottom Left
+    for (let i = 1; i <= 2; i++) {
       let row = selectedPiece.row + i;
+      let column = selectedPiece.column - (i === 1 ? 2 : 1);
+      updateMove({ row, column });
+    }
 
-      if (i === 0 || row < 0 || row > 7) {
-        if (i === 0) {
-          j = 2;
-        }
-        updateValue(i);
-        continue;
-      }
-
-      let columns: number[] = [];
-
-      if (selectedPiece.column + j >= 0 && selectedPiece.column + j <= 7) {
-        columns.push(selectedPiece.column + j);
-      }
-      if (selectedPiece.column - j >= 0 && selectedPiece.column - j <= 7) {
-        columns.push(selectedPiece.column - j);
-      }
-
-      columns.forEach((column) => {
-        let data = {
-          row,
-          column,
-        };
-        let chessPiece = getChessPiece(data);
-
-        if (chessPiece) {
-          if (chessPiece.color !== selectedPiece?.color) {
-            possibleMoves.push({ ...data, className: ClassNames.CAPTURE });
-          }
-        } else {
-          possibleMoves.push({ ...data, className: ClassNames.HIGHLIGHT });
-        }
-      });
-
-      updateValue(i);
+    // Bottom Right
+    for (let i = 1; i <= 2; i++) {
+      let row = selectedPiece.row + i;
+      let column = selectedPiece.column + (i === 1 ? 2 : 1);
+      updateMove({ row, column });
     }
   };
 
