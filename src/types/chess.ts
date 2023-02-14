@@ -16,11 +16,13 @@ export type ChessDataAttributes = {
   piece?: Pieces;
 };
 
-export type PossibleMoves = {
+type Moves = {
   row: number;
   column: number;
   className: string;
-}[];
+};
+
+export type PossibleMoves = Moves[];
 
 export type HightLightPossibleMoves = (possibleMoves: PossibleMoves) => void;
 
@@ -34,3 +36,5 @@ export type SelectedPiece = {
 } | null;
 
 export type HandleChessPiece = (possibleMoves: PossibleMoves) => void;
+
+export type Position = Omit<Moves, "className">;

@@ -6,6 +6,7 @@ import {
   HightLightPossibleMoves,
   Pieces,
   PossibleMoves,
+  Position,
   SelectedPiece,
 } from "./types/chess";
 
@@ -271,7 +272,7 @@ const Chess = (() => {
   const handleRook: HandleChessPiece = (possibleMoves) => {
     if (!selectedPiece) return;
 
-    const updateMove = (data: { row: number; column: number }): boolean => {
+    const updateMove = (data: Position): boolean => {
       let chessPiece = getChessPiece(data);
 
       if (chessPiece) {
@@ -312,7 +313,7 @@ const Chess = (() => {
   const handleBishop: HandleChessPiece = (possibleMoves) => {
     if (!selectedPiece) return;
 
-    const updateMove = (data: { row: number; column: number }): boolean => {
+    const updateMove = (data: Position): boolean => {
       let chessPiece = getChessPiece(data);
 
       if (chessPiece) {
@@ -359,7 +360,7 @@ const Chess = (() => {
   const handleKnight: HandleChessPiece = (possibleMoves) => {
     if (!selectedPiece) return;
 
-    const updateMove = (data: { row: number; column: number }) => {
+    const updateMove = (data: Position) => {
       let { row, column } = data;
 
       if (row < 0 || row > 7 || column < 0 || column > 7) return;
