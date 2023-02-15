@@ -9,6 +9,10 @@ import {
   Position,
   SelectedPiece,
 } from "./types/chess";
+import confetti from "canvas-confetti";
+
+import blackAvatar from "./assets/images/black-avatar.png";
+import whiteAvatar from "./assets/images/white-avatar.png";
 
 import "./chess.scss";
 
@@ -166,6 +170,19 @@ let selectedPiece: SelectedPiece = null;
 
 let turn: Colors = "white";
 
+let gameOver = false;
+
+function handleClickBoard(event: MouseEvent) {
+  let element = event.target;
+
+  if (
+    element instanceof HTMLButtonElement &&
+    element.classList.contains("tile")
+  ) {
+    handleClickTile.call(element);
+  }
+}
+
 const initChess = () => {
   let chessBoard = document.createElement("div");
   chessBoard.classList.add("board");
@@ -188,21 +205,54 @@ const initChess = () => {
     html += `<div class='row'>${tiles}</div>`;
   });
 
-  chessBoard.addEventListener("click", function (event) {
-    let element = event.target;
-
-    if (
-      element instanceof HTMLButtonElement &&
-      element.classList.contains("tile")
-    ) {
-      handleClickTile.call(element);
-    }
-  });
+  chessBoard.addEventListener("click", handleClickBoard);
 
   chessBoard.innerHTML = html;
 
+  let blackHeader = document.createElement("div");
+  let whiteHeader = document.createElement("div");
+
+  blackHeader.innerHTML = getHeaderHtml({
+    img: blackAvatar,
+    name: "Player B",
+    color: "black",
+  });
+  whiteHeader.innerHTML = getHeaderHtml({
+    img: whiteAvatar,
+    name: "Player A",
+    color: "white",
+    highlight: true,
+  });
+
   let app = document.querySelector("#app") as HTMLDivElement;
-  app.append(chessBoard);
+
+  app.append(blackHeader, chessBoard, whiteHeader);
+};
+
+type GetHeaderHtml = (options: {
+  img: string;
+  name: string;
+  color: string;
+  highlight?: boolean;
+}) => string;
+
+const getHeaderHtml: GetHeaderHtml = ({
+  img,
+  name,
+  color,
+  highlight = false,
+}) => {
+  let html = `<div class='header'>
+        <img src='${img}' />
+        <div>
+            <span class='${
+              highlight ? ClassNames.HIGHLIGHT : ""
+            }' data-user-color='${color}'>${name}</span>
+            <span>${color}</span>
+        </div> 
+    </div>`;
+
+  return html;
 };
 
 const highLightPossibleMoves: HightLightPossibleMoves = (possibleMoves) => {
@@ -510,7 +560,40 @@ function handleCheckMate(this: HTMLButtonElement) {
   );
 
   if (!element) {
-    console.log(`${turn} wins!`);
+    let userElement = document.querySelector<HTMLSpanElement>(
+      `[data-user-color='${turn}']`
+    );
+
+    if (userElement) {
+      userElement.classList.add(ClassNames.HIGHLIGHT);
+      userElement.append(" (Winner)");
+    }
+
+    const canvas = document.createElement("canvas");
+    document.body.append(canvas);
+
+    const Confetti = confetti.create(canvas, {
+      resize: true,
+    });
+
+    Confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+
+    let element = document.querySelector<HTMLDivElement>(".board");
+
+    if (element) {
+      element.removeEventListener("click", handleClickBoard);
+    }
+
+    setTimeout(() => {
+      canvas.remove();
+    }, 3000);
+
+    gameOver = true;
+
     return;
   }
 
@@ -545,6 +628,12 @@ function handleCheckMate(this: HTMLButtonElement) {
 
 const handlePlayerTurn = () => {
   turn = turn === "black" ? "white" : "black";
+  let elements = document.querySelectorAll<HTMLDivElement>("[data-user-color]");
+  elements.forEach((element) => {
+    element.dataset.userColor === turn
+      ? element.classList.add(ClassNames.HIGHLIGHT)
+      : element.classList.remove(ClassNames.HIGHLIGHT);
+  });
 };
 
 const getPossibleMoves = (piece: Pieces): PossibleMoves => {
@@ -586,6 +675,14 @@ function handleClickTile(this: HTMLButtonElement) {
   let { color, piece, row, column } = this.dataset as ChessDataAttributes;
 
   if (selectedPiece) {
+    let kingElement = document.querySelector<HTMLButtonElement>(
+      `.${ClassNames.DANGER}`
+    );
+
+    if (kingElement) {
+      kingElement.classList.remove(ClassNames.DANGER);
+    }
+
     let chessPiece = getChessPiece({ row: +row, column: +column });
 
     if (chessPiece && !this.classList.contains(ClassNames.CAPTURE)) {
@@ -614,6 +711,7 @@ function handleClickTile(this: HTMLButtonElement) {
     this.disabled = false;
     handleCheckMate.call(this);
     clearSelectedPiece();
+    if (gameOver) return;
     handlePlayerTurn();
   } else if (piece && color) {
     if (turn !== color) return;
