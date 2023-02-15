@@ -170,32 +170,39 @@ const initChess = () => {
   let chessBoard = document.createElement("div");
   chessBoard.classList.add("board");
 
+  let html = "";
+
   board.forEach((chessPieces, row) => {
-    let container = document.createElement("div");
-    container.classList.add("row");
+    let tiles = chessPieces.reduce((tilesHtml, chessPiece, column) => {
+      tilesHtml += `<button class='tile' data-row='${row}' data-column='${column}' ${
+        !chessPiece ? `disabled='true'` : ""
+      } ${
+        chessPiece
+          ? `data-color='${chessPiece.color}' data-piece='${chessPiece.piece}'`
+          : ""
+      }></button>`;
 
-    chessPieces.forEach((chessPiece, column) => {
-      let button = document.createElement("button");
-      button.classList.add("tile");
-      button.setAttribute("data-row", row.toString());
-      button.setAttribute("data-column", column.toString());
-      button.addEventListener("click", handleClickPiece);
-      button.disabled = !chessPiece;
-      if (chessPiece) {
-        let { color, piece } = chessPiece;
-        button.setAttribute("data-color", color);
-        button.setAttribute("data-piece", piece);
-      }
-      let element = document.createElement("div");
-      element.classList.add("icon");
-      button.append(element);
-      container.append(button);
-    });
+      return tilesHtml;
+    }, "");
 
-    chessBoard.append(container);
+    html += `<div class='row'>${tiles}</div>`;
   });
 
-  document.body.append(chessBoard);
+  chessBoard.addEventListener("click", function (event) {
+    let element = event.target;
+
+    if (
+      element instanceof HTMLButtonElement &&
+      element.classList.contains("tile")
+    ) {
+      handleClickTile.call(element);
+    }
+  });
+
+  chessBoard.innerHTML = html;
+
+  let app = document.querySelector("#app") as HTMLDivElement;
+  app.append(chessBoard);
 };
 
 const highLightPossibleMoves: HightLightPossibleMoves = (possibleMoves) => {
@@ -575,7 +582,7 @@ const getPossibleMoves = (piece: Pieces): PossibleMoves => {
   return possibleMoves;
 };
 
-function handleClickPiece(this: HTMLButtonElement) {
+function handleClickTile(this: HTMLButtonElement) {
   let { color, piece, row, column } = this.dataset as ChessDataAttributes;
 
   if (selectedPiece) {
@@ -583,7 +590,7 @@ function handleClickPiece(this: HTMLButtonElement) {
 
     if (chessPiece && !this.classList.contains(ClassNames.CAPTURE)) {
       clearSelectedPiece();
-      handleClickPiece.call(this);
+      handleClickTile.call(this);
       return;
     }
 
