@@ -1,3 +1,3 @@
-import Chess from "./chess";
+import initChess from "./chess";
 
-Chess.init();
+initChess();
