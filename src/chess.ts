@@ -8,7 +8,8 @@ import {
   PossibleMoves,
   Position,
   SelectedPiece,
-} from "./types/chess";
+  GetHeaderHtml,
+} from "./types";
 import confetti from "canvas-confetti";
 
 import blackAvatar from "./assets/images/black-avatar.png";
@@ -228,13 +229,6 @@ const initChess = () => {
 
   app.append(blackHeader, chessBoard, whiteHeader);
 };
-
-type GetHeaderHtml = (options: {
-  img: string;
-  name: string;
-  color: string;
-  highlight?: boolean;
-}) => string;
 
 const getHeaderHtml: GetHeaderHtml = ({
   img,

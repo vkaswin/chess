@@ -42,3 +42,10 @@ export type Position = Omit<Moves, "className">;
 export type GetPossibleMoves = (
   data: { piece: Pieces } & Position
 ) => PossibleMoves;
+
+export type GetHeaderHtml = (options: {
+  img: string;
+  name: string;
+  color: string;
+  highlight?: boolean;
+}) => string;
